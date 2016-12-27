@@ -16,38 +16,61 @@ function Ball(xPos, yPos, radius, context) {
 
 function Player(context) {
     this.paddle = new Paddle(782, 237.5, 8, 75, 10, context);
- }
-
-function Computer(context) {
-    this.paddle = new Paddle(10, 237.5, 8, 75,10, context);
 }
 
-Paddle.prototype.render = function () {
+function Computer(context) {
+    this.paddle = new Paddle(10, 237.5, 8, 75, 10, context);
+}
+
+Paddle.prototype.render = function() {
     this.context.beginPath();
     this.context.rect(this.xPosition, this.yPosition, this.width, this.height);
     this.context.fill();
- };
-
-Ball.prototype.render = function (context) {
-    context.beginPath();
-    context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI, false);
-    context.strokeStyle = 'black';
-    context.stroke();
-    context.fillStyle = 'black';
-    context.fill();
 };
 
-Player.prototype.render = function (context) {
-    this.paddle.render(context);
+Paddle.prototype.move = function(keyCode) {
+    if (keyCode === 38) {
+        this.yPosition -= this.speed;
+        if (this.yPosition <= 0) {
+            this.yPosition = 0;
+        }
+    } else if (keyCode === 40) {
+        this.yPosition += this.speed;
+        if (this.yPosition >= (this.context.canvas.height - this.height)) {
+            this.yPosition = this.context.canvas.height - this.height;
+        }
+    }
 };
 
-Computer.prototype.render = function (context) {
-    this.paddle.render(context);
+Ball.prototype.render = function() {
+    this.context.beginPath();
+    this.context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI, false);
+    this.context.fill();
 };
 
-var player = new Player();
-var computer = new Computer();
-var ball = new Ball(400, 275, 10);
+
+
+Player.prototype.render = function () {
+    this.paddle.render();
+};
+
+Computer.prototype.render = function () {
+    this.paddle.render();
+};
+
+var canvas = document.getElementById("pongTable");
+var context = canvas.getContext('2d');
+var player = new Player(context);
+var computer = new Computer(context);
+var ball = new Ball(400, 275, 10, context);
+
+
+var animate = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function (step) { window.setTimeout(step, 1000 / 60); };
 
 function render(context) {
     player.render(context);
@@ -55,7 +78,7 @@ function render(context) {
     ball.render(context);
 }
 
-window.onload = function () {
+window.onload = function() {
     var canvas = document.getElementById("pongTable");
     var context = canvas.getContext('2d');
     render(context);
