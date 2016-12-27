@@ -50,11 +50,11 @@ Ball.prototype.render = function() {
 
 
 
-Player.prototype.render = function () {
+Player.prototype.render = function() {
     this.paddle.render();
 };
 
-Computer.prototype.render = function () {
+Computer.prototype.render = function() {
     this.paddle.render();
 };
 
@@ -66,20 +66,29 @@ var ball = new Ball(400, 275, 10, context);
 
 
 var animate = window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        function (step) { window.setTimeout(step, 1000 / 60); };
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function(step) {
+        window.setTimeout(step, 1000 / 60);
+    };
 
-function render(context) {
-    player.render(context);
-    computer.render(context);
-    ball.render(context);
+function render() {
+    player.render();
+    computer.render();
+    ball.render();
+}
+
+function step() {
+    context.canvas.width = context.canvas.width;
+    render(context);
+    animate(step);
 }
 
 window.onload = function() {
-    var canvas = document.getElementById("pongTable");
-    var context = canvas.getContext('2d');
-    render(context);
+    window.addEventListener('keydown', function(event) {
+        player.paddle.move(event.keyCode);
+    });
+    animate(step);
 };
