@@ -1,30 +1,32 @@
-function Paddle(xPos, yPos, width, height) {
+function Paddle(xPos, yPos, width, height, speed, context) {
     this.xPosition = xPos;
     this.yPosition = yPos;
     this.width = width;
     this.height = height;
+    this.speed = speed;
+    this.context = context;
 }
 
-function Ball(xPos, yPos, radius) {
+function Ball(xPos, yPos, radius, context) {
     this.xPosition = xPos;
     this.yPosition = yPos;
     this.radius = radius;
+    this.context = context;
 }
 
-function Player() {
-    this.paddle = new Paddle(782, 237.5, 8, 75);
+function Player(context) {
+    this.paddle = new Paddle(782, 237.5, 8, 75, 10, context);
+ }
+
+function Computer(context) {
+    this.paddle = new Paddle(10, 237.5, 8, 75,10, context);
 }
 
-function Computer() {
-    this.paddle = new Paddle(10, 237.5, 8, 75);
-}
-
-Paddle.prototype.render = function (context) {
-    context.beginPath();
-    context.rect(this.xPosition, this.yPosition, this.width, this.height);
-    context.fillStyle = "black";
-    context.fill();
-};
+Paddle.prototype.render = function () {
+    this.context.beginPath();
+    this.context.rect(this.xPosition, this.yPosition, this.width, this.height);
+    this.context.fill();
+ };
 
 Ball.prototype.render = function (context) {
     context.beginPath();
