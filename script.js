@@ -198,21 +198,31 @@ function ScoreBoard(width, height, context) {
 }
 
 ScoreBoard.prototype.render = function() {
+    var compScore = pad(computer.score);
+    var playerScore = pad(player.score);
+
+    var score = compScore + " - " + playerScore;
     this.context.beginPath();
     this.context.strokeStyle = "white";
     this.context.rect(this.xPosition, this.yPosition, this.width, this.height);
     this.context.stroke();
     this.context.font = "40px Verdana";
-    this.context.fillText(computer.score + " - " + player.score, this.xCenter - 48, this.yPosition + this.height / 2);
+    this.context.fillText(score, this.xCenter - (context.measureText(score).width / 2), this.yPosition + this.height / 2);
     //this.context.fillText(computer.score, this.xCenter - 20, this.yPosition + (this.height / 2));
 };
 
+function pad(score) {
+    if (score <= 9) {
+        return "0" + score;
+    }
+    return score;
+}
 var canvas = document.getElementById("pongTable");
 var context = canvas.getContext('2d');
 var player = new Player(context);
 var computer = new Computer(context);
 var ball = new Ball(400, 275, 10, context);
-var scoreBoard = new ScoreBoard(150, 100, context);
+var scoreBoard = new ScoreBoard(200, 150, context);
 var playerInput = {};
 var isPaused = true;
 context.fillStyle = 'white';
@@ -255,21 +265,21 @@ function step() {
 }
 
 window.onload = function() {
-        window.addEventListener('keyup', function(event) {
-            playerInput[event.keyCode] = false;
-        });
-        window.addEventListener('keydown', function(event) {
-            if (event.keyCode === 38 && playerInput[40]) {
-                playerInput[40] = false;
-            } else if (event.keyCode === 40 && playerInput[38]) {
-                playerInput[38] = false;
-            }
-            playerInput[event.keyCode] = true;
+    window.addEventListener('keyup', function(event) {
+        playerInput[event.keyCode] = false;
+    });
+    window.addEventListener('keydown', function(event) {
+        if (event.keyCode === 38 && playerInput[40]) {
+            playerInput[40] = false;
+        } else if (event.keyCode === 40 && playerInput[38]) {
+            playerInput[38] = false;
+        }
+        playerInput[event.keyCode] = true;
 
-            if (event.keyCode === 32) {
-                isPaused = !isPaused;
-            }
-        });
-        serve();
-        animate(step);
-      };
+        if (event.keyCode === 32) {
+            isPaused = !isPaused;
+        }
+    });
+    serve();
+    animate(step);
+};
