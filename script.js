@@ -186,6 +186,9 @@ Ball.prototype.serve = function() {
     } else if (this.ySpeed < 0 && this.xSpeed > -7) {
         this.ySpeed = -7;
     }
+    if (player.score === 11 || computer.score === 11) {
+        gameOver = true;
+    }
 };
 
 function ScoreBoard(width, height, context) {
@@ -225,6 +228,7 @@ var ball = new Ball(400, 275, 10, context);
 var scoreBoard = new ScoreBoard(200, 150, context);
 var playerInput = {};
 var isPaused = true;
+var gameOver = false;
 context.fillStyle = 'white';
 
 var animate = window.requestAnimationFrame ||
@@ -246,8 +250,26 @@ function serve() {
 function render() {
     player.render();
     computer.render();
-    ball.render();
+    if(!gameOver) {
+        ball.render();
+    }
     scoreBoard.render();
+    if (player.score > computer.score && gameOver) {
+        gameOverRender("You Won!");
+    } else if (player.score < computer.score && gameOver) {
+        gameOverRender("You Lost!");
+    }
+}
+
+function gameOverRender(endString) {
+    var resetText = "Press Space to Replay";
+
+    context.fillText(endString, centerTextWidth(endString), canvas.height / 2);
+    context.fillText(resetText, centerTextWidth(resetText), (canvas.height / 2) + (canvas.height / 5));
+}
+
+function centerTextWidth(text) {
+    return (canvas.width / 2) - (context.measureText(text).width / 2);
 }
 
 function step() {
@@ -278,6 +300,11 @@ window.onload = function() {
 
         if (event.keyCode === 32) {
             isPaused = !isPaused;
+            if (gameOver) {
+                gameOver = false;
+                player.score = 0;
+                computer.score = 0;
+            };
         }
     });
     serve();
